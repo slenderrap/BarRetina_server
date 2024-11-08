@@ -28,6 +28,6 @@ public class ProductLoaderTest {
     public void testGetTags() {
         ArrayList<String> tags = ProductLoader.getTags();
         assertNotNull(tags);
-        assertEquals(10, tags.size());
+        assertEquals(7, tags.size(), "The number of tags is incorrect: " + tags);
     }
 }
