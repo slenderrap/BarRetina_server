@@ -8,7 +8,7 @@
         <descripcio>Beguda refrescant amb gas</descripcio>
         <tags>
             <tag>beguda</tag>
-            <tag>freda</tag>
+            <tag>fred</tag>
         </tags>
         <imatge>CocaCola.jpg</imatge>
     </producte>
@@ -18,7 +18,7 @@
         <descripcio>Cervesa americana</descripcio>
         <tags>
             <tag>beguda</tag>
-            <tag>freda</tag>
+            <tag>fred</tag>
             <tag>alcohol</tag>
         </tags>
         <imatge>Corona.jpg</imatge>
@@ -29,7 +29,7 @@
         <descripcio>Beguda refrescant amb gas</descripcio>
         <tags>
             <tag>beguda</tag>
-            <tag>freda</tag>
+            <tag>fred</tag>
         </tags>
         <imatge>FantaTaronja.jpg</imatge>
     </producte>
@@ -39,7 +39,7 @@
         <descripcio>Aigua mineral natural</descripcio>
         <tags>
             <tag>beguda</tag>
-            <tag>freda</tag>
+            <tag>fred</tag>
         </tags>
         <imatge>Aigua.jpg</imatge>
     </producte>
@@ -59,7 +59,7 @@
         <descripcio>Suc de piña natural</descripcio>
         <tags>
             <tag>beguda</tag>
-            <tag>freda</tag>
+            <tag>fred</tag>
         </tags>
         <imatge>SucPiña.jpg</imatge>
     </producte>
@@ -69,7 +69,7 @@
         <descripcio>Cafè acabat de fer</descripcio>
         <tags>
             <tag>beguda</tag>
-            <tag>calenta</tag>
+            <tag>calent</tag>
         </tags>
         <imatge>Cafe.jpg</imatge>
     </producte>
@@ -252,7 +252,7 @@
     <producte id="25">
         <nom>Gaspatxo</nom>
         <preu>5.00</preu>
-        <descripcio>Sopa freda de tomàquet i verdures</descripcio>
+        <descripcio>Sopa fred de tomàquet i verdures</descripcio>
         <tags>
             <tag>entrant</tag>
             <tag>fred</tag>
