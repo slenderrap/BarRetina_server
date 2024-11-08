@@ -41,6 +41,33 @@ public class ProductLoader {
         return products;
     }
 
+    public static ArrayList<String> getTags() {
+        File inputFile = null;
+        try {
+            inputFile = new File(ProductLoader.class.getClassLoader().getResource(PRODUCTS_FILE).toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Error al cargar el fichero XML");
+        }
+        Document doc = parseXML(inputFile);
+        ArrayList<String> tags = new ArrayList<>();
+        if (doc == null) {
+            throw new RuntimeException("Error al cargar el fichero XML");
+        }
+        NodeList productes = doc.getElementsByTagName("producte");
+        for (int i = 0; i < productes.getLength(); i++) {
+            Element element = (Element) productes.item(i);
+            NodeList tagsNodeList = element.getElementsByTagName("tag");
+            for (int j = 0; j < tagsNodeList.getLength(); j++) {
+                Element tagElement = (Element) tagsNodeList.item(j);
+                if (!tags.contains(tagElement.getTextContent())) {
+                    tags.add(tagElement.getTextContent());
+                }
+            }
+        }
+        return tags;
+
+    }
+
     private static Product loadProduct(Element element) {
         int id = Integer.parseInt(element.getAttribute("id"));
         String nom = element.getElementsByTagName("nom").item(0).getTextContent();

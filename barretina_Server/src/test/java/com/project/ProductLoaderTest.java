@@ -23,4 +23,11 @@ public class ProductLoaderTest {
             assertTrue((product.getId() > 0 && product.getId() <= 25));
         }
     }
+
+    @Test
+    public void testGetTags() {
+        ArrayList<String> tags = ProductLoader.getTags();
+        assertNotNull(tags);
+        assertEquals(10, tags.size());
+    }
 }
