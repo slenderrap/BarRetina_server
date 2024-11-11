@@ -1,6 +1,8 @@
 package com.project;
 
 import java.util.ArrayList;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 public class Product {
     private int id;
@@ -77,4 +79,19 @@ public class Product {
         this.imageBase64 = imageBase64;
     }
 
+    public JSONObject toJsonObject() {
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        JSONArray tagsJson = new JSONArray(tags);
+        json.put("tags", tagsJson);
+        json.put("price", price);
+        json.put("description", description);
+        json.put("imageBase64", imageBase64);
+        return json;
+    }
+
+    public String toJsonString() {
+        return toJsonObject().toString();
+    }
 }
