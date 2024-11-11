@@ -1,1 +1,5 @@
 com/project/Main.class
+com/project/Product.class
+com/project/Client.class
+com/project/Server.class
+com/project/ProductLoader.class

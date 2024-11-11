@@ -27,7 +27,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-
+        System.out.println("El cliente se ha desconectado");
     }
 
     @Override

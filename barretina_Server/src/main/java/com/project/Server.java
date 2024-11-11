@@ -19,9 +19,9 @@ public class Server extends WebSocketServer {
 
     private Map<WebSocket, String> clients;
     private List<String> availableNames;
-    private Map<String, JSONObject> clientMousePositions = new HashMap<>();
+    private Map<String, JSONObject> jsonPing = new HashMap<>();
 
-    static Map<String, JSONObject> selectableObjects = new HashMap<>();
+    static Map<String, JSONObject> jsonBounce = new HashMap<>();
 
     public Server(InetSocketAddress address) {
         super(address);
@@ -39,8 +39,9 @@ public class Server extends WebSocketServer {
         String clientName = getNextAvailableName();
         clients.put(conn, clientName);
         System.out.println("WebSocket client connected: " + clientName);
-        sendClientsList();
-        sendCowntdown();
+//        sendClientsList();
+
+
     }
 
     private String getNextAvailableName() {
@@ -66,48 +67,32 @@ public class Server extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         JSONObject obj = new JSONObject(message);
+        System.out.println("dentro");
 
 
         if (obj.has("type")) {
             String type = obj.getString("type");
 
             switch (type) {
-                case "clientMouseMoving":
+                case "bounce":
                     // Obtenim el clientId del missatge
-                    String clientId = obj.getString("clientId");
-                    clientMousePositions.put(clientId, obj);
+                    String message1 = obj.getString("message");
+                    jsonBounce.put(message1, obj);
 
                     // Prepara el missatge de tipus 'serverMouseMoving' amb les posicions de tots els clients
                     JSONObject rst0 = new JSONObject();
-                    rst0.put("type", "serverMouseMoving");
-                    rst0.put("positions", clientMousePositions);
+                    rst0.put("type", "bounce");
+                    rst0.put("message", jsonBounce);
 
                     // Envia el missatge a tots els clients connectats
-                    broadcastMessage(rst0.toString(), null);
+                    conn.send(rst0.toString());
                     break;
-                case "clientSelectableObjectMoving":
-                    String objectId = obj.getString("objectId");
-                    selectableObjects.put(objectId, obj);
+                case "ping":
+                    JSONObject rst1 = new JSONObject();
+                    rst1.put("type", "ping");
 
-                    sendServerSelectableObjects();
+                    conn.send(rst1.toString());
                     break;
-            }
-        }
-    }
-
-    private void broadcastMessage(String message, WebSocket sender) {
-        for (Map.Entry<WebSocket, String> entry : clients.entrySet()) {
-            WebSocket conn = entry.getKey();
-            if (conn != sender) {
-                try {
-                    conn.send(message);
-                } catch (WebsocketNotConnectedException e) {
-                    System.out.println("Client " + entry.getValue() + " not connected.");
-                    clients.remove(conn);
-                    availableNames.add(entry.getValue());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -182,38 +167,17 @@ public class Server extends WebSocketServer {
             }
         }
     }
-
-    public void sendCowntdown() {
-        int requiredNumberOfClients = 2;
-        if (clients.size() == requiredNumberOfClients) {
-            for (int i = 5; i >= 0; i--) {
-                JSONObject msg = new JSONObject();
-                msg.put("type", "countdown");
-                msg.put("value", i);
-                broadcastMessage(msg.toString(), null);
-                if (i == 0) {
-                    sendServerSelectableObjects();
-                } else {
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
-    public void sendServerSelectableObjects() {
-
-        // Prepara el missatge de tipus 'serverObjects' amb les posicions de tots els clients
-        JSONObject rst1 = new JSONObject();
-        rst1.put("type", "serverSelectableObjects");
-        rst1.put("selectableObjects", selectableObjects);
-
-        // Envia el missatge a tots els clients connectats
-        broadcastMessage(rst1.toString(), null);
-    }
+//
+//    public void sendServerSelectableObjects() {
+//
+//        // Prepara el missatge de tipus 'serverObjects' amb les posicions de tots els clients
+//        JSONObject rst1 = new JSONObject();
+//        rst1.put("type", "bounce");
+//        rst1.put("selectableObjects", jsonBounce);
+//
+//        // Envia el missatge a tots els clients connectats
+//        broadcastMessage(rst1.toString(), null);
+//    }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
