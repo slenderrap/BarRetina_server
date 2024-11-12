@@ -17,12 +17,13 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
+        System.out.println("conexion establecida: "+getConnection().getRemoteSocketAddress());
 
     }
 
     @Override
     public void onMessage(String s) {
-        System.out.println(s);
+        System.out.println(s+"\n");
     }
 
     @Override
