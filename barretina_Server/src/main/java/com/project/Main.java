@@ -22,6 +22,27 @@ public class Main{
         Server server = new Server(new InetSocketAddress(3000));
         server.start();
 
+//        LineReader reader = LineReaderBuilder.builder().build();
+//        System.out.println("Server running. Type 'exit' to gracefully stop it.");
+
+
+
+
+//        Client client = null;
+//        try {
+//            client = new Client("ws://localhost:3000",new Draft_6455());
+//        } catch (URISyntaxException e) {
+//            throw new RuntimeException(e);
+//        }
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        client.connect();
+//        client.send("ping");
+//        client.close();
+//        System.out.println("Fin programa");
 
 //        server.onClose();
 //        server.onOpen();

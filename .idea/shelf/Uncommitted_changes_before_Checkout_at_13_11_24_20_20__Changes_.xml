@@ -1,0 +1,29 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]" date="1731525608347" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 13/11/24 20:20 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="barretina_Server/target/test-classes/com/project/ProductLoaderTest.class" />
+    <option name="AFTER_PATH" value="barretina_Server/target/test-classes/com/project/ProductLoaderTest.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]/ProductLoaderTest.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="barretina_Server/target/classes/com/project/ProductLoader.class" />
+    <option name="AFTER_PATH" value="barretina_Server/target/classes/com/project/ProductLoader.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]/ProductLoader.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="barretina_Server/target/classes/com/project/Product.class" />
+    <option name="AFTER_PATH" value="barretina_Server/target/classes/com/project/Product.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]/Product.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="barretina_Server/target/classes/com/project/Server.class" />
+    <option name="AFTER_PATH" value="barretina_Server/target/classes/com/project/Server.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]/Server.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="barretina_Server/target/classes/com/project/Main.class" />
+    <option name="AFTER_PATH" value="barretina_Server/target/classes/com/project/Main.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_11_24_20_20_[Changes]/Main.class" />
+  </binary>
+</changelist>
