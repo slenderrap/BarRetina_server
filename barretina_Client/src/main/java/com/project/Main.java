@@ -16,7 +16,7 @@ public class Main {
         System.out.println("Server running. Type 'exit' to close connection.");
         Client client = null;
         try {
-            client = new Client("wss://barretina4.ieti.site:443", new Draft_6455());
+            client = new Client("ws://localhost:3000", new Draft_6455());
             client.connect();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);

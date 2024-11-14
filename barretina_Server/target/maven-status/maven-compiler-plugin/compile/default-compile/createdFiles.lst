@@ -1,4 +1,4 @@
-com/project/Main.class
-com/project/Product.class
-com/project/Server.class
-com/project/ProductLoader.class
+com\project\Main.class
+com\project\Server.class
+com\project\Product.class
+com\project\ProductLoader.class

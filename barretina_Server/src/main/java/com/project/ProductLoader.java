@@ -3,6 +3,7 @@ package com.project;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -22,13 +23,7 @@ public class ProductLoader {
     public static final String PRODUCTS_FILE = "Productes.xml";
 
     public static ArrayList<Product> loadProducts() {
-        File inputFile = null;
-        try {
-            inputFile = new File(ProductLoader.class.getClassLoader().getResource(PRODUCTS_FILE).toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Error al cargar el fichero XML");
-        }
-        Document doc = parseXML(inputFile);
+        Document doc = parseXML(PRODUCTS_FILE);
         ArrayList<Product> products = new ArrayList<>();
         if (doc == null) {
             throw new RuntimeException("Error al cargar el fichero XML");
@@ -42,13 +37,7 @@ public class ProductLoader {
     }
 
     public static ArrayList<String> getTags() {
-        File inputFile = null;
-        try {
-            inputFile = new File(ProductLoader.class.getClassLoader().getResource(PRODUCTS_FILE).toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Error al cargar el fichero XML");
-        }
-        Document doc = parseXML(inputFile);
+        Document doc = parseXML(PRODUCTS_FILE);
         ArrayList<String> tags = new ArrayList<>();
         if (doc == null) {
             throw new RuntimeException("Error al cargar el fichero XML");
@@ -102,15 +91,19 @@ public class ProductLoader {
         }
     }
 
-    private static Document parseXML(File inputFile) {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(inputFile);
-            doc.getDocumentElement().normalize();
-            return doc;
+   private static Document parseXML(String resourcePath) {
+        try (InputStream inputStream = ProductLoader.class.getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                System.out.println("XML resource not found: " + resourcePath);
+                System.out.println("XML resource not found: " + Paths.get(resourcePath).toAbsolutePath());
+
+                return null;
+            }
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            return builder.parse(inputStream);
         } catch (Exception e) {
-            throw new RuntimeException("Error al parsear el fichero XML");
+            throw new RuntimeException("Error al cargar el fichero XML");
         }
     }
 }
