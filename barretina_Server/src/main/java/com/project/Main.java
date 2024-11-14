@@ -19,7 +19,7 @@ public class Main{
     public static void main(String[] args) {
 
         // WebSockets server
-        Server server = new Server(new InetSocketAddress(3000));
+        Server server = new Server(new InetSocketAddress("0.0.0.0",3000));
         server.start();
 
 //        LineReader reader = LineReaderBuilder.builder().build();
