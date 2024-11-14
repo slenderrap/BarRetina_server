@@ -95,6 +95,27 @@ public class Server extends WebSocketServer {
 
 //                    sendServerSelectableObjects();
                         break;
+                    case "getProducts":
+                        JSONObject rst2 = new JSONObject();
+                        rst2.put("type", "ack");
+                        rst2.put("responseType", "getProducts");
+                        ArrayList<Product> products = ProductLoader.loadProducts();
+                        JSONArray jsonProducts = new JSONArray();
+                        for (Product product : products) {
+                            jsonProducts.put(product.toJsonObject());
+                        }
+                        rst2.put("products", jsonProducts);
+                        conn.send(rst2.toString());
+                        break;
+                    case "getTags":
+                        JSONObject rst3 = new JSONObject();
+                        rst3.put("type", "ack");
+                        rst3.put("responseType", "getTags");
+                        JSONArray jsonTags = new JSONArray(ProductLoader.getTags());
+                        rst3.put("tags", jsonTags);
+                        conn.send(rst3.toString());
+                        break;
+
                     default:
                         conn.send("Unknow command");
                         break;
