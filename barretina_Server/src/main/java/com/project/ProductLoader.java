@@ -20,7 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class ProductLoader {
 
-    public static final String PRODUCTS_FILE = "Productes.xml";
+    public static final String PRODUCTS_FILE = "/Productes.xml";
 
     public static ArrayList<Product> loadProducts() {
         Document doc = parseXML(PRODUCTS_FILE);
@@ -68,30 +68,25 @@ public class ProductLoader {
             Element tagElement = (Element) tagsNodeList.item(j);
             tags.add(tagElement.getTextContent());
         }
-        URL imatgeURL = ProductLoader.class.getClassLoader().getResource("images/" + element.getElementsByTagName("imatge").item(0).getTextContent());
-        if (imatgeURL == null) {
-            throw new RuntimeException("Error al cargar la imagen: " + element.getElementsByTagName("imatge").item(0).getTextContent());
-        }
-        try {
-            String imatgePath = Paths.get(imatgeURL.toURI()).toString();
-            String imatgeBase64 = encodeImageToBase64(imatgePath);
-            return new Product(id, nom, preu, descripcio, tags, imatgePath, imatgeBase64);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Error al cargar la imagen: " + element.getElementsByTagName("imatge").item(0).getTextContent());
-        }
-    }
-
-    public static String encodeImageToBase64(String imagePath)  {
-        try (FileInputStream imageStream = new FileInputStream(new File(imagePath))) {
-            byte[] imageBytes = new byte[imageStream.available()];
-            imageStream.read(imageBytes);
-            return Base64.getEncoder().encodeToString(imageBytes);
+        
+        String imageName = element.getElementsByTagName("imatge").item(0).getTextContent();
+        String imagePath = "images/" + imageName;
+        
+        try (InputStream imageStream = ProductLoader.class.getClassLoader().getResourceAsStream(imagePath)) {
+            if (imageStream == null) {
+                throw new RuntimeException("Error al cargar la imagen: " + imageName);
+            }
+            
+            byte[] imageBytes = imageStream.readAllBytes();
+            String imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
+            
+            return new Product(id, nom, preu, descripcio, tags, imagePath, imageBase64);
         } catch (IOException e) {
-            throw new RuntimeException("Error al codificar la imagen a base64: " + imagePath);
+            throw new RuntimeException("Error al cargar la imagen: " + imageName, e);
         }
     }
 
-   private static Document parseXML(String resourcePath) {
+    private static Document parseXML(String resourcePath) {
         try (InputStream inputStream = ProductLoader.class.getResourceAsStream(resourcePath)) {
             if (inputStream == null) {
                 System.out.println("XML resource not found: " + resourcePath);
