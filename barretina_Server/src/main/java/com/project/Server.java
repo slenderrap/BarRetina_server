@@ -121,53 +121,41 @@ public class Server extends WebSocketServer {
                         conn.send(rst3.toString());
                         break;
                     case "getTables":
-                        JSONObject rst4 = new JSONObject();
+                        /*JSONObject rst4 = new JSONObject();
                         rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
-                        JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray("SELECT * FROM taula JOIN comanda ON taula.id_comanda = comanda.id_comanda JOIN cambrer ON comanda.id_cambrer = cambrer.id_cambrer");
+                        JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray(
+                            "SELECT taula.id_taula as tableNumber, cambrer.nom as waiter,"
+                            +"taula.ocupada as occupied, comanda.pagat as paid "
+                            +"FROM taula JOIN comanda ON taula.id_comanda = comanda.id_comanda"
+                            +"JOIN cambrer ON comanda.id_cambrer = cambrer.id_cambrer"
+                        );*
+                        rst4.put("tables", jsonTables);
+                        conn.send(rst4.toString());
+                        break;*/
+                        //TEST
+                        JSONObject rst4 = new JSONObject();
+                        rst4.put("responseType", "getTables");
+                        JSONArray jsonTables = new JSONArray();
+                        jsonTables.put(new JSONObject("{tableNumber: 1, waiter: 'Marc', occupied: false, paid: false}"));
+                        jsonTables.put(new JSONObject("{tableNumber: 2, waiter: 'Maria', occupied: true, paid: false}"));
+                        jsonTables.put(new JSONObject("{tableNumber: 3, waiter: 'Pere', occupied: true, paid: true}"));
                         rst4.put("tables", jsonTables);
                         conn.send(rst4.toString());
                         break;
                     case "setCommand":
-                        int tableNumber = obj.getInt("tableNumber");
-                        String sql = "Select id_comanda from taula where taulaId = ?";
-                        try {
-                            PreparedStatement stmt = UtilsDB.getInstance().getPreparedStatement(sql);
-                            stmt.setInt(1, tableNumber);
-                            ResultSet rs = stmt.executeQuery();
-                            int commandId = -1;
-                            if (rs.next()) {
-                                commandId = rs.getInt("id_comanda");
-                            }
-                            if (commandId == -1) {
-                                //new command
-                                JSONArray jsonCommands = obj.getJSONArray("products");
-                                for (int i = 0; i < jsonCommands.length(); i++) {
-                                    JSONObject jsonCommand = jsonCommands.getJSONObject(i);
-                                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                                    sql = "INSERT INTO comanda (, data_hora) VALUES (?, ?, ?)";
-                                }
-                            }
-                            else {
-                                //update command
-                            }
-                            
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-
                         //TODO
                         break;
                     default:
-                        conn.send("Unknow command");
+                        conn.send("{type: 'error', message: 'Unknow command'}");
                         break;
                 }
             } else {
-                conn.send("Has introduit malament el json");
+                conn.send("{type: 'error', message: 'Malformed JSON, missing type'}");
 
             }
         } catch (JSONException e) {
-            conn.send("Unknow command");
+            conn.send("{type: 'error', message: 'Malformed JSON,required parameters not found for request of type ' + type'}");
         }
     }
 
