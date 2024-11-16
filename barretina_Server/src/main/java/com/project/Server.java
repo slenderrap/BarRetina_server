@@ -8,9 +8,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.project.Utils.UtilsDB;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -94,6 +99,64 @@ public class Server extends WebSocketServer {
                         conn.send(rst1.toString());
 
 //                    sendServerSelectableObjects();
+                        break;
+                    case "getProducts":
+                        JSONObject rst2 = new JSONObject();
+                        rst2.put("type", "ack");
+                        rst2.put("responseType", "getProducts");
+                        ArrayList<Product> products = ProductLoader.loadProducts();
+                        JSONArray jsonProducts = new JSONArray();
+                        for (Product product : products) {
+                            jsonProducts.put(product.toJsonObject());
+                        }
+                        rst2.put("products", jsonProducts);
+                        conn.send(rst2.toString());
+                        break;
+                    case "getTags":
+                        JSONObject rst3 = new JSONObject();
+                        rst3.put("type", "ack");
+                        rst3.put("responseType", "getTags");
+                        JSONArray jsonTags = new JSONArray(ProductLoader.getTags());
+                        rst3.put("tags", jsonTags);
+                        conn.send(rst3.toString());
+                        break;
+                    case "getTables":
+                        JSONObject rst4 = new JSONObject();
+                        rst4.put("type", "ack");
+                        rst4.put("responseType", "getTables");
+                        JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray("SELECT * FROM taula JOIN comanda ON taula.id_comanda = comanda.id_comanda JOIN cambrer ON comanda.id_cambrer = cambrer.id_cambrer");
+                        rst4.put("tables", jsonTables);
+                        conn.send(rst4.toString());
+                        break;
+                    case "setCommand":
+                        int tableNumber = obj.getInt("tableNumber");
+                        String sql = "Select id_comanda from taula where taulaId = ?";
+                        try {
+                            PreparedStatement stmt = UtilsDB.getInstance().getPreparedStatement(sql);
+                            stmt.setInt(1, tableNumber);
+                            ResultSet rs = stmt.executeQuery();
+                            int commandId = -1;
+                            if (rs.next()) {
+                                commandId = rs.getInt("id_comanda");
+                            }
+                            if (commandId == -1) {
+                                //new command
+                                JSONArray jsonCommands = obj.getJSONArray("products");
+                                for (int i = 0; i < jsonCommands.length(); i++) {
+                                    JSONObject jsonCommand = jsonCommands.getJSONObject(i);
+                                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                                    sql = "INSERT INTO comanda (, data_hora) VALUES (?, ?, ?)";
+                                }
+                            }
+                            else {
+                                //update command
+                            }
+                            
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        //TODO
                         break;
                     default:
                         conn.send("Unknow command");
