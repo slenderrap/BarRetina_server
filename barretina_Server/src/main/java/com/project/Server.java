@@ -135,6 +135,7 @@ public class Server extends WebSocketServer {
                         break;*/
                         //TEST
                         JSONObject rst4 = new JSONObject();
+                        rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = new JSONArray();
                         jsonTables.put(new JSONObject("{tableNumber: 1, waiter: 'Marc', occupied: false, paid: false}"));
