@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -145,7 +146,82 @@ public class Server extends WebSocketServer {
                         conn.send(rst4.toString());
                         break;
                     case "setCommand":
-                        //TODO
+                        int tableNumber = obj.getInt("tableNumber");
+                        JSONArray commandProducts = obj.getJSONArray("products");
+                        
+                        // Check if table has an existing command
+                        String checkCommandQuery = "SELECT id_comanda FROM taula WHERE id_taula = ?";
+                        
+                        ResultSet rs = UtilsDB.getInstance().queryResultSet(checkCommandQuery, tableNumber);
+                        
+                        int commandId = -1;
+                        boolean commandExists = false;
+                        try {
+                            if (rs.next()) {
+                                // Update existing command
+                                Object commandIdObj = rs.getObject("id_comanda");
+                                if (commandIdObj != null) {
+                                    commandId = rs.getInt("id_comanda");
+                                    commandExists = true;
+                                }
+                            } else {
+                                conn.send("{type: 'error', message: 'Error table does not exists, tableNumber: " + tableNumber + "'}");
+                                return;
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (rs != null) {
+                                    rs.close();
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (commandExists) {
+                            // Delete existing command-products
+                            UtilsDB.getInstance().executeUpdate(
+                                false,
+                                "DELETE FROM comanda_producte WHERE id_comanda = ?",
+                                commandId
+                            );
+                        } else {
+                            String insertCommandQuery = "INSERT INTO comanda (pagat, data) VALUES (false, ?)";
+                            commandId = UtilsDB.getInstance().executeInsert(
+                                false,
+                                insertCommandQuery,
+                                new Timestamp(System.currentTimeMillis())
+                            );
+                            String updateTableQuery = "UPDATE taula SET id_comanda = ? WHERE id_taula = ?";
+                            UtilsDB.getInstance().executeUpdate(
+                                false,
+                                updateTableQuery,
+                                commandId,
+                                tableNumber
+                            );
+                        }
+
+                        // Insert new command-products
+                        String insertProductQuery = "INSERT INTO comanda-producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)";
+                        for (int i = 0; i < commandProducts.length(); i++) {
+                            JSONObject product = commandProducts.getJSONObject(i);
+                            UtilsDB.getInstance().executeUpdate(
+                                false,
+                                insertProductQuery,
+                                commandId,
+                                product.getInt("id"),
+                                product.getInt("quantity")
+                            );
+                        }
+
+                        // Send confirmation response
+                        JSONObject response = new JSONObject();
+                        response.put("type", "ack");
+                        response.put("responseType", "setCommand");
+                        response.put("commandId", commandId);
+                        conn.send(response.toString());
+                        UtilsDB.getInstance().commit();
                         break;
                     default:
                         conn.send("{type: 'error', message: 'Unknow command'}");

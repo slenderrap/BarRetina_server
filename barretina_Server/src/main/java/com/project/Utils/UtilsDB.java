@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.sql.ResultSetMetaData;
 
 public class UtilsDB {
@@ -30,13 +31,18 @@ public class UtilsDB {
     private UtilsDB() {
         System.out.println("Connecting to the database...");
         connect();
+        try {
+            conn.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         System.out.println("Connected");
     }
 
     public void connect() {
-        String url = "jdbc:oracle:thin:" + Username + "/" + Password + "@" + HostName + ":" + Port + ":" + DatabaseName;
+        String url = "jdbc:mysql://" + HostName + ":" + Port + "/" + DatabaseName;
         try {
-            conn = DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(url, Username, Password);
             conn.setAutoCommit(false); // Desactiva l'autocommit per permetre control manual de transaccions
             
         } catch (SQLException e) {
@@ -144,6 +150,118 @@ public class UtilsDB {
             jsonArray.put(jsonObject);
         }
         return jsonArray;
+    }
+
+    public ResultSet queryResultSet(String sql, Object... params) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            return stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void executeUpdate(String sql, Object... params) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Error during rollback: " + ex.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void executeUpdate(boolean commit, String sql, Object... params) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            stmt.executeUpdate();
+            if (commit) {
+                conn.commit();
+            }
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Error during rollback: " + ex.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public int executeInsert(String sql, Object... params) {
+        int generatedId = -1;
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            stmt.executeUpdate();
+            
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Error during rollback: " + ex.getMessage());
+            }
+            e.printStackTrace();
+        }
+        
+        return generatedId;
+    }
+
+    public int executeInsert(boolean commit, String sql, Object... params) {
+        int generatedId = -1;
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            stmt.executeUpdate();
+            
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+            }
+            if (commit) {
+                conn.commit();
+            }
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Error during rollback: " + ex.getMessage());
+            }
+            e.printStackTrace();
+        }
+        
+        return generatedId;
+    }
+
+    public void commit() {
+        try {
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
 }
