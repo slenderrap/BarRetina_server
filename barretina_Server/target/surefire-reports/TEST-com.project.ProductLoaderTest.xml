@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.project.ProductLoaderTest" time="0.156" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.project.ProductLoaderTest" time="0.159" tests="2" errors="0" skipped="0" failures="0">
   <properties>
-    <property name="java.specification.version" value="22"/>
+    <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="c:\Users\Oscar\Desktop\Github\Bar\BarRetina_server\barretina_Server\target\test-classes;c:\Users\Oscar\Desktop\Github\Bar\BarRetina_server\barretina_Server\target\classes;C:\Users\Oscar\.m2\repository\org\json\json\20240303\json-20240303.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.2\junit-jupiter-engine-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-engine\1.9.2\junit-platform-engine-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-commons\1.9.2\junit-platform-commons-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.2\junit-jupiter-api-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Oscar\.m2\repository\org\java-websocket\Java-WebSocket\1.5.3\Java-WebSocket-1.5.3.jar;C:\Users\Oscar\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-reader\3.14.1\jline-reader-3.14.1.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-terminal\3.14.1\jline-terminal-3.14.1.jar;C:\Users\Oscar\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\Oscar\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;"/>
+    <property name="java.class.path" value="c:\Users\Oscar\Desktop\GIt\Bar\Server\BarRetina_server\barretina_Server\target\test-classes;c:\Users\Oscar\Desktop\GIt\Bar\Server\BarRetina_server\barretina_Server\target\classes;C:\Users\Oscar\.m2\repository\org\json\json\20240303\json-20240303.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.2\junit-jupiter-engine-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-engine\1.9.2\junit-platform-engine-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-commons\1.9.2\junit-platform-commons-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.2\junit-jupiter-api-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Oscar\.m2\repository\org\java-websocket\Java-WebSocket\1.5.3\Java-WebSocket-1.5.3.jar;C:\Users\Oscar\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-reader\3.14.1\jline-reader-3.14.1.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-terminal\3.14.1\jline-terminal-3.14.1.jar;C:\Users\Oscar\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\Oscar\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
     <property name="user.timezone" value="Europe/Madrid"/>
     <property name="os.name" value="Windows 10"/>
-    <property name="java.vm.specification.version" value="22"/>
+    <property name="java.vm.specification.version" value="21"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ES"/>
-    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-22\bin"/>
-    <property name="sun.java.command" value="C:\Users\Oscar\AppData\Local\Temp\surefire4076015898829352\surefirebooter-20241116153723439_3.jar C:\Users\Oscar\AppData\Local\Temp\surefire4076015898829352 2024-11-16T15-37-23_283-jvmRun1 surefire-20241116153723439_1tmp surefire_0-20241116153723439_2tmp"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
+    <property name="sun.java.command" value="C:\Users\Oscar\AppData\Local\Temp\surefire16891564513702870048\surefirebooter-20241116160916492_3.jar C:\Users\Oscar\AppData\Local\Temp\surefire16891564513702870048 2024-11-16T16-09-16_311-jvmRun1 surefire-20241116160916492_1tmp surefire_0-20241116160916492_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="c:\Users\Oscar\Desktop\Github\Bar\BarRetina_server\barretina_Server\target\test-classes;c:\Users\Oscar\Desktop\Github\Bar\BarRetina_server\barretina_Server\target\classes;C:\Users\Oscar\.m2\repository\org\json\json\20240303\json-20240303.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.2\junit-jupiter-engine-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-engine\1.9.2\junit-platform-engine-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-commons\1.9.2\junit-platform-commons-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.2\junit-jupiter-api-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Oscar\.m2\repository\org\java-websocket\Java-WebSocket\1.5.3\Java-WebSocket-1.5.3.jar;C:\Users\Oscar\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-reader\3.14.1\jline-reader-3.14.1.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-terminal\3.14.1\jline-terminal-3.14.1.jar;C:\Users\Oscar\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\Oscar\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;"/>
+    <property name="surefire.test.class.path" value="c:\Users\Oscar\Desktop\GIt\Bar\Server\BarRetina_server\barretina_Server\target\test-classes;c:\Users\Oscar\Desktop\GIt\Bar\Server\BarRetina_server\barretina_Server\target\classes;C:\Users\Oscar\.m2\repository\org\json\json\20240303\json-20240303.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.2\junit-jupiter-engine-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-engine\1.9.2\junit-platform-engine-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Oscar\.m2\repository\org\junit\platform\junit-platform-commons\1.9.2\junit-platform-commons-1.9.2.jar;C:\Users\Oscar\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.2\junit-jupiter-api-5.9.2.jar;C:\Users\Oscar\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Oscar\.m2\repository\org\java-websocket\Java-WebSocket\1.5.3\Java-WebSocket-1.5.3.jar;C:\Users\Oscar\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-reader\3.14.1\jline-reader-3.14.1.jar;C:\Users\Oscar\.m2\repository\org\jline\jline-terminal\3.14.1\jline-terminal-3.14.1.jar;C:\Users\Oscar\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\Oscar\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Oscar"/>
     <property name="user.language" value="es"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
-    <property name="java.version.date" value="2024-04-16"/>
-    <property name="java.home" value="C:\Program Files\Java\jdk-22"/>
+    <property name="java.version.date" value="2023-09-19"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-21"/>
     <property name="file.separator" value="\"/>
-    <property name="basedir" value="c:\Users\Oscar\Desktop\Github\Bar\BarRetina_server\barretina_Server"/>
-    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="basedir" value="c:\Users\Oscar\Desktop\GIt\Bar\Server\BarRetina_server\barretina_Server"/>
+    <property name="java.vm.compressedOopsMode" value="32-bit"/>
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Oscar\AppData\Local\Temp\surefire4076015898829352\surefirebooter-20241116153723439_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Oscar\AppData\Local\Temp\surefire16891564513702870048\surefirebooter-20241116160916492_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="java.runtime.version" value="22.0.1+8-16"/>
+    <property name="java.runtime.version" value="21+35-LTS-2513"/>
     <property name="user.name" value="Oscar"/>
     <property name="stdout.encoding" value="Cp1252"/>
     <property name="path.separator" value=";"/>
@@ -44,20 +44,20 @@
     <property name="localRepository" value="C:\Users\Oscar\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\Oscar\AppData\Local\Temp\"/>
-    <property name="java.version" value="22.0.1"/>
-    <property name="user.dir" value="c:\Users\Oscar\Desktop\Github\Bar\BarRetina_server\barretina_Server"/>
+    <property name="java.version" value="21"/>
+    <property name="user.dir" value="c:\Users\Oscar\Desktop\GIt\Bar\Server\BarRetina_server\barretina_Server"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Java\jdk-22\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;E:\aplicaciones\Anaconda;E:\aplicaciones\Anaconda\Library\mingw-w64\bin;E:\aplicaciones\Anaconda\Library\usr\bin;E:\aplicaciones\Anaconda\Library\bin;E:\aplicaciones\Anaconda\Scripts;E:\aplicaciones\Anaconda\bin;E:\aplicaciones\Anaconda\condabin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Python312\Scripts;C:\Python312;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;E:\aplicaciones\Git\cmd;C:\Program Files\dotnet;E:\aplicaciones\node;C:\ProgramData\chocolatey\bin;.;C:\Program Files\Dart\dart-sdk\bin;E:\aplicaciones\Anaconda;E:\aplicaciones\Anaconda\Library\mingw-w64\bin;E:\aplicaciones\Anaconda\Library\usr\bin;E:\aplicaciones\Anaconda\Library\bin;E:\aplicaciones\Anaconda\Scripts;C:\Users\Oscar\.console-ninja\.bin;C:\Users\Oscar\AppData\Local\Programs\Python\Python310\Scripts;C:\Users\Oscar\AppData\Local\Programs\Python\Python310;C:\Users\Oscar\AppData\Local\Microsoft\WindowsApps;C:\Users\Oscar\AppData\Local\GitHubDesktop\bin;C:\Users\Oscar\.dotnet\tools;C:\Users\Oscar\AppData\Local\Programs\Ollama;C:\Users\Oscar\.bun\bin;C:\Users\Oscar\AppData\Roaming\npm;C:\Users\Oscar\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk-22\bin;C:\Users\Oscar\AppData\Local\Programs\Microsoft VS Code\bin;E:\aplicaciones\Flutter\flutter\bin;C:\Program Files\Java\apache-maven-3.9.9\bin;.;."/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-21\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\app\Oscar\product\21c\dbhomeXE\bin;C:\Program Files (x86)\VMware\VMware Player\bin\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Users\Oscar\.console-ninja\.bin;C:\Users\Oscar\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\Oscar\AppData\Local\Programs\Python\Python311\;C:\Users\Oscar\AppData\Local\Microsoft\WindowsApps;C:\Users\Oscar\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Oscar\AppData\Roaming\npm;C:\Users\Oscar\AppData\Local\GitHubDesktop\bin;C:\Program Files\MongoDB\Server\7.0\bin;C:\Users\Oscar\AppData\Local\Android\Sdk\platform-tools;C:\Users\Oscar\AppData\Local\Android\Sdk\tools;C:\Program Files\Java\jdk-21\bin;C:\Users\Oscar\AppData\Local\Android\Sdk\tools\bin;C:\Users\Oscar\AppData\Local\Android\Sdk\cmdline-tools\latest\bin;C:\Gradle\gradle-8.10.1\bin;C:\Users\Oscar\AppData\Local\Android\Sdk\platforms;C:\Users\Oscar\AppData\Local\Programs\Ollama;C:\apache-maven-3.9.9\bin;;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="stderr.encoding" value="Cp1252"/>
     <property name="java.vendor" value="Oracle Corporation"/>
-    <property name="java.vm.version" value="22.0.1+8-16"/>
+    <property name="java.vm.version" value="21+35-LTS-2513"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
-    <property name="java.class.version" value="66.0"/>
+    <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testGetTags" classname="com.project.ProductLoaderTest" time="0.083"/>
-  <testcase name="testLoadProducts" classname="com.project.ProductLoaderTest" time="0.051"/>
+  <testcase name="testGetTags" classname="com.project.ProductLoaderTest" time="0.086"/>
+  <testcase name="testLoadProducts" classname="com.project.ProductLoaderTest" time="0.049"/>
 </testsuite>
