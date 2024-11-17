@@ -1,4 +1,5 @@
 # Llegir les línies de l'arxiu config.env
+Set-Location "barretina_Server\proxmox"
 $configFile = "config.env"
 Get-Content $configFile | ForEach-Object {
     $line = $_
