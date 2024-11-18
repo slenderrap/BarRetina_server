@@ -21,11 +21,11 @@ import java.sql.ResultSetMetaData;
 public class UtilsDB {
 
     public static UtilsDB instance;
-    private String HostName = "20.224.68.0";
-    private String Port = "1521";
-    private String DatabaseName = "MYDB";
-    private String Username = "usuario";
-    private String Password = "1234";
+    private String HostName = "localhost";
+    private String Port = "3306";
+    private String DatabaseName = "barretina";
+    private String Username = "barretina4";
+    private String Password = "barretina4";
     private static Connection conn;
 
     private UtilsDB() {
