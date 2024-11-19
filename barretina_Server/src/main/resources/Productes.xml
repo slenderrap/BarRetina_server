@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 7 begudes, 6 tapes, 6 postres, 6 entrants -->
+<productes>
+    <!-- Begudes -->
+    <producte id="1">
+        <nom>Coca Cola</nom>
+        <preu>1.50</preu>
+        <descripcio>Beguda refrescant amb gas</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>CocaCola.jpg</imatge>
+    </producte>
+    <producte id="2">
+        <nom>Cervesa Corona</nom>
+        <preu>2.00</preu>
+        <descripcio>Cervesa americana</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>fred</tag>
+            <tag>alcohol</tag>
+        </tags>
+        <imatge>Corona.jpg</imatge>
+    </producte>
+    <producte id="3">
+        <nom>Fanta de taronja</nom>
+        <preu>2.50</preu>
+        <descripcio>Beguda refrescant amb gas</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>FantaTaronja.jpg</imatge>
+    </producte>
+    <producte id="4">
+        <nom>Aigua mineral</nom>
+        <preu>1.20</preu>
+        <descripcio>Aigua mineral natural</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Aigua.jpg</imatge>
+    </producte>
+    <producte id="5">
+        <nom>Vermut</nom>
+        <preu>2.80</preu>
+        <descripcio>Vermut amb oliva i taronja</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>alcohol</tag>
+        </tags>
+        <imatge>Vermut.jpg</imatge>
+    </producte>
+    <producte id="6">
+        <nom>Suc de piña</nom>
+        <preu>2.20</preu>
+        <descripcio>Suc de piña natural</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>SucPiña.jpg</imatge>
+    </producte>
+    <producte id="7">
+        <nom>Cafè</nom>
+        <preu>1.30</preu>
+        <descripcio>Cafè acabat de fer</descripcio>
+        <tags>
+            <tag>beguda</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Cafe.jpg</imatge>
+    </producte>
+
+    <!-- Tapes -->
+    <producte id="8">
+        <nom>Patates braves</nom>
+        <preu>4.50</preu>
+        <descripcio>Patates amb salsa brava i allioli</descripcio>
+        <tags>
+            <tag>tapa</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Braves.jpg</imatge>
+    </producte>
+    <producte id="9">
+        <nom>Croquetes de pernil</nom>
+        <preu>5.00</preu>
+        <descripcio>Croquetes casolanes de pernil ibèric</descripcio>
+        <tags>
+            <tag>tapa</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Croquetes.jpg</imatge>
+    </producte>
+    <producte id="10">
+        <nom>Calamars a la romana</nom>
+        <preu>6.50</preu>
+        <descripcio>Calamars frescos arrebossats</descripcio>
+        <tags>
+            <tag>tapa</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Calamars.jpg</imatge>
+    </producte>
+    <producte id="11">
+        <nom>Pernil ibèric</nom>
+        <preu>12.00</preu>
+        <descripcio>Ració de pernil ibèric de gla</descripcio>
+        <tags>
+            <tag>tapa</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Pernil.jpg</imatge>
+    </producte>
+    <producte id="12">
+        <nom>Bombes picants</nom>
+        <preu>5.50</preu>
+        <descripcio>Bombes de patata farcides de carn picant</descripcio>
+        <tags>
+            <tag>tapa</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Bombes.jpg</imatge>
+    </producte>
+    <producte id="13">
+        <nom>Xampinyons a l'allet</nom>
+        <preu>4.80</preu>
+        <descripcio>Xampinyons saltejats amb all i julivert</descripcio>
+        <tags>
+            <tag>tapa</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Xampinyons.jpg</imatge>
+    </producte>
+
+    <!-- Postres -->
+    <producte id="14">
+        <nom>Crema catalana</nom>
+        <preu>4.00</preu>
+        <descripcio>Crema catalana casolana</descripcio>
+        <tags>
+            <tag>postre</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Crema.jpg</imatge>
+    </producte>
+    <producte id="15">
+        <nom>Mel i mató</nom>
+        <preu>4.50</preu>
+        <descripcio>Mató amb mel i nous</descripcio>
+        <tags>
+            <tag>postre</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>MelMato.jpg</imatge>
+    </producte>
+    <producte id="16">
+        <nom>Pastís de formatge</nom>
+        <preu>4.80</preu>
+        <descripcio>Pastís de formatge amb fruits vermells</descripcio>
+        <tags>
+            <tag>postre</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Cheesecake.jpg</imatge>
+    </producte>
+    <producte id="17">
+        <nom>Flam d'ou</nom>
+        <preu>3.50</preu>
+        <descripcio>Flam casolà amb nata</descripcio>
+        <tags>
+            <tag>postre</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Flam.jpg</imatge>
+    </producte>
+    <producte id="18">
+        <nom>Brownie amb gelat</nom>
+        <preu>5.00</preu>
+        <descripcio>Brownie calent amb gelat de vainilla</descripcio>
+        <tags>
+            <tag>postre</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Brownie.jpg</imatge>
+    </producte>
+    <producte id="19">
+        <nom>Meduixes amb nata</nom>
+        <preu>3.50</preu>
+        <descripcio>Meduixes fresques amb nata</descripcio>
+        <tags>
+            <tag>postre</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Meduixes.jpg</imatge>
+    </producte>
+
+    <!-- Entrants -->
+    <producte id="20">
+        <nom>Amanida catalana</nom>
+        <preu>7.50</preu>
+        <descripcio>Amanida amb embotits i olivada</descripcio>
+        <tags>
+            <tag>entrant</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>AmanidaCatalana.jpg</imatge>
+    </producte>
+    <producte id="21">
+        <nom>Sopa de galets</nom>
+        <preu>6.00</preu>
+        <descripcio>Sopa tradicional amb galets i pilota</descripcio>
+        <tags>
+            <tag>entrant</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Sopa.jpg</imatge>
+    </producte>
+    <producte id="22">
+        <nom>Escalivada</nom>
+        <preu>6.50</preu>
+        <descripcio>Pebrots i albergínies rostits amb anxoves</descripcio>
+        <tags>
+            <tag>entrant</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Escalivada.jpg</imatge>
+    </producte>
+    <producte id="23">
+        <nom>Canelons</nom>
+        <preu>8.50</preu>
+        <descripcio>Canelons tradicionals gratinats</descripcio>
+        <tags>
+            <tag>entrant</tag>
+            <tag>calent</tag>
+        </tags>
+        <imatge>Canelons.jpg</imatge>
+    </producte>
+    <producte id="24">
+        <nom>Macarrons a la boloñesa</nom>
+        <preu>3.00</preu>
+        <descripcio>Macarrons amb salsa boloñesa</descripcio>
+        <tags>
+            <tag>entrant</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Macarrons.jpg</imatge>
+    </producte>
+    <producte id="25">
+        <nom>Gaspatxo</nom>
+        <preu>5.00</preu>
+        <descripcio>Sopa fred de tomàquet i verdures</descripcio>
+        <tags>
+            <tag>entrant</tag>
+            <tag>fred</tag>
+        </tags>
+        <imatge>Gaspatxo.jpg</imatge>
+    </producte>
+</productes>
