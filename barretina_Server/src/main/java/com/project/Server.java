@@ -122,20 +122,20 @@ public class Server extends WebSocketServer {
                         conn.send(rst3.toString());
                         break;
                     case "getTables":
-                        /*JSONObject rst4 = new JSONObject();
+                        JSONObject rst4 = new JSONObject();
                         rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray(
-                            "SELECT taula.id_taula as tableNumber, cambrer.nom as waiter,"
-                            +"taula.ocupada as occupied, comanda.pagat as paid "
-                            +"FROM taula JOIN comanda ON taula.id_comanda = comanda.id_comanda"
-                            +"JOIN cambrer ON comanda.id_cambrer = cambrer.id_cambrer"
-                        );*
+                            "SELECT t.id_taula as tableNumber, ca.nom as waiter, "
+                            +"t.ocupada as occupied, c.pagat as paid "
+                            +"FROM taula t LEFT JOIN comanda c ON c.id_taula = t.id_taula "
+                            +"LEFT JOIN cambrer ca ON ca.id_cambrer = t.id_cambrer"
+                        );
                         rst4.put("tables", jsonTables);
                         conn.send(rst4.toString());
-                        break;*/
+                        break;
                         //TEST
-                        JSONObject rst4 = new JSONObject();
+                        /*JSONObject rst4 = new JSONObject();
                         rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = new JSONArray();
@@ -144,7 +144,7 @@ public class Server extends WebSocketServer {
                         jsonTables.put(new JSONObject("{tableNumber: 3, waiter: 'Pere', occupied: true, paid: true}"));
                         rst4.put("tables", jsonTables);
                         conn.send(rst4.toString());
-                        break;
+                        break;*/
                     case "setCommand":
                         int tableNumber = obj.getInt("tableNumber");
                         JSONArray commandProducts = obj.getJSONArray("products");
