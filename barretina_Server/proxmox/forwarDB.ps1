@@ -1,0 +1,1 @@
+ssh -i C:\Users\Oscar\.ssh\id_rsa -p 20127 -L 3307:localhost:3306 barretina4@ieticloudpro.ieti.cat

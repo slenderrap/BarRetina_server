@@ -151,7 +151,7 @@ public class Server extends WebSocketServer {
                         JSONArray commandProducts = obj.getJSONArray("products");
                         
                         // Check if table has an existing command
-                        String checkCommandQuery = "SELECT id_comanda FROM taula WHERE id_taula = ?";
+                        String checkCommandQuery = "SELECT id_comanda FROM comanda WHERE id_taula = ? ORDER BY data_comanda DESC LIMIT 1";
                         
                         ResultSet rs = UtilsDB.getInstance().queryResultSet(checkCommandQuery, tableNumber);
                         
@@ -165,15 +165,12 @@ public class Server extends WebSocketServer {
                                     commandId = rs.getInt("id_comanda");
                                     commandExists = true;
                                 }
-                            } else {
-                                conn.send("{type: 'error', message: 'Error table does not exists, tableNumber: " + tableNumber + "'}");
-                                return;
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         } finally {
                             try {
-                                if (rs != null) {
+                                if (rs != null && !rs.isClosed()) {
                                     rs.close();
                                 }
                             } catch (SQLException e) {
@@ -188,23 +185,24 @@ public class Server extends WebSocketServer {
                                 commandId
                             );
                         } else {
-                            String insertCommandQuery = "INSERT INTO comanda (pagat, data) VALUES (false, ?)";
+                            String insertCommandQuery = "INSERT INTO comanda (pagat, data_comanda, id_taula) VALUES (false, ?, ?)";
                             commandId = UtilsDB.getInstance().executeInsert(
                                 false,
                                 insertCommandQuery,
-                                new Timestamp(System.currentTimeMillis())
+                                new Timestamp(System.currentTimeMillis()),
+                                tableNumber
                             );
-                            String updateTableQuery = "UPDATE taula SET id_comanda = ? WHERE id_taula = ?";
+                            /*String updateTableQuery = "UPDATE taula SET id_comanda = ? WHERE id_taula = ?";
                             UtilsDB.getInstance().executeUpdate(
                                 false,
                                 updateTableQuery,
                                 commandId,
                                 tableNumber
-                            );
+                            );*/
                         }
 
                         // Insert new command-products
-                        String insertProductQuery = "INSERT INTO comanda-producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)";
+                        String insertProductQuery = "INSERT INTO comanda_producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)";
                         for (int i = 0; i < commandProducts.length(); i++) {
                             JSONObject product = commandProducts.getJSONObject(i);
                             UtilsDB.getInstance().executeUpdate(

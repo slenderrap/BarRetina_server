@@ -145,7 +145,12 @@ public class UtilsDB {
         for (Map<String, Object> row : resultList) {
             JSONObject jsonObject = new JSONObject();
             for (Map.Entry<String, Object> entry : row.entrySet()) {
-                jsonObject.put(entry.getKey(), entry.getValue());
+                if (entry.getValue() != null) {
+                    jsonObject.put(entry.getKey(), entry.getValue());
+                }
+                else{
+                    jsonObject.put(entry.getKey(), JSONObject.NULL);
+                }
             }
             jsonArray.put(jsonObject);
         }
@@ -153,7 +158,8 @@ public class UtilsDB {
     }
 
     public ResultSet queryResultSet(String sql, Object... params) {
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
             }
