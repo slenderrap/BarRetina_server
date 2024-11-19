@@ -73,6 +73,7 @@ public class Server extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         System.out.println("aqui");
+        String type = "";
         try {
             JSONObject obj = new JSONObject(message);
 
@@ -232,7 +233,10 @@ public class Server extends WebSocketServer {
 
             }
         } catch (JSONException e) {
-            conn.send("{type: 'error', message: 'Malformed JSON,required parameters not found for request of type ' + type'}");
+            JSONObject rst = new JSONObject();
+            rst.put("type", "error");
+            rst.put("message", "Malformed JSON,required parameters not found for request of type " + type);
+            conn.send(rst.toString());
         }
     }
 
