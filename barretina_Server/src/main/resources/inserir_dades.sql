@@ -54,7 +54,6 @@ CREATE TRIGGER actualizar_preu_conjunt
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
 BEGIN
-    -- Solo recalcula preu_conjunt cuando la columna quantitat ha cambiado
     IF OLD.quantitat <> NEW.quantitat THEN
         UPDATE comanda_producte
         SET preu_conjunt = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * NEW.quantitat
@@ -63,3 +62,47 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER actualizar_preu_restant
+AFTER UPDATE ON comanda_producte
+FOR EACH ROW
+BEGIN
+    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
+        IF quantitat = NEW.quantitat_pagada THEN
+            UPDATE comanda_producte
+            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( OLD.quantitat - NEW.quantitat_pagada),
+            estat = 'pagada'
+            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+
+        ELSE
+            UPDATE comanda_producte
+            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( OLD.quantitat - NEW.quantitat_pagada)
+            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER actualizar_preu_restant
+AFTER UPDATE ON comanda_producte
+FOR EACH ROW
+BEGIN
+    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
+        IF NEW.quantitat = NEW.quantitat_pagada THEN
+            UPDATE comanda_producte
+            SET preu_restant = 0, estat = 'pagada'
+            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+        ELSE
+            UPDATE comanda_producte
+            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( NEW.quantitat - NEW.quantitat_pagada)
+            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
