@@ -73,6 +73,7 @@ public class Server extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         System.out.println("aqui");
+        String type = "";
         try {
             JSONObject obj = new JSONObject(message);
 
@@ -122,20 +123,20 @@ public class Server extends WebSocketServer {
                         conn.send(rst3.toString());
                         break;
                     case "getTables":
-                        /*JSONObject rst4 = new JSONObject();
+                        JSONObject rst4 = new JSONObject();
                         rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray(
-                            "SELECT taula.id_taula as tableNumber, cambrer.nom as waiter,"
-                            +"taula.ocupada as occupied, comanda.pagat as paid "
-                            +"FROM taula JOIN comanda ON taula.id_comanda = comanda.id_comanda"
-                            +"JOIN cambrer ON comanda.id_cambrer = cambrer.id_cambrer"
-                        );*
+                            "SELECT t.id_taula as tableNumber, ca.nom as waiter, "
+                            +"t.ocupada as occupied, c.pagat as paid "
+                            +"FROM taula t LEFT JOIN comanda c ON c.id_taula = t.id_taula "
+                            +"LEFT JOIN cambrer ca ON ca.id_cambrer = t.id_cambrer"
+                        );
                         rst4.put("tables", jsonTables);
                         conn.send(rst4.toString());
-                        break;*/
+                        break;
                         //TEST
-                        JSONObject rst4 = new JSONObject();
+                        /*JSONObject rst4 = new JSONObject();
                         rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = new JSONArray();
@@ -144,13 +145,13 @@ public class Server extends WebSocketServer {
                         jsonTables.put(new JSONObject("{tableNumber: 3, waiter: 'Pere', occupied: true, paid: true}"));
                         rst4.put("tables", jsonTables);
                         conn.send(rst4.toString());
-                        break;
+                        break;*/
                     case "setCommand":
                         int tableNumber = obj.getInt("tableNumber");
                         JSONArray commandProducts = obj.getJSONArray("products");
                         
                         // Check if table has an existing command
-                        String checkCommandQuery = "SELECT id_comanda FROM taula WHERE id_taula = ?";
+                        String checkCommandQuery = "SELECT id_comanda FROM comanda WHERE id_taula = ? ORDER BY data_comanda DESC LIMIT 1";
                         
                         ResultSet rs = UtilsDB.getInstance().queryResultSet(checkCommandQuery, tableNumber);
                         
@@ -164,15 +165,12 @@ public class Server extends WebSocketServer {
                                     commandId = rs.getInt("id_comanda");
                                     commandExists = true;
                                 }
-                            } else {
-                                conn.send("{type: 'error', message: 'Error table does not exists, tableNumber: " + tableNumber + "'}");
-                                return;
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         } finally {
                             try {
-                                if (rs != null) {
+                                if (rs != null && !rs.isClosed()) {
                                     rs.close();
                                 }
                             } catch (SQLException e) {
@@ -187,23 +185,24 @@ public class Server extends WebSocketServer {
                                 commandId
                             );
                         } else {
-                            String insertCommandQuery = "INSERT INTO comanda (pagat, data) VALUES (false, ?)";
+                            String insertCommandQuery = "INSERT INTO comanda (pagat, data_comanda, id_taula) VALUES (false, ?, ?)";
                             commandId = UtilsDB.getInstance().executeInsert(
                                 false,
                                 insertCommandQuery,
-                                new Timestamp(System.currentTimeMillis())
+                                new Timestamp(System.currentTimeMillis()),
+                                tableNumber
                             );
-                            String updateTableQuery = "UPDATE taula SET id_comanda = ? WHERE id_taula = ?";
+                            /*String updateTableQuery = "UPDATE taula SET id_comanda = ? WHERE id_taula = ?";
                             UtilsDB.getInstance().executeUpdate(
                                 false,
                                 updateTableQuery,
                                 commandId,
                                 tableNumber
-                            );
+                            );*/
                         }
 
                         // Insert new command-products
-                        String insertProductQuery = "INSERT INTO comanda-producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)";
+                        String insertProductQuery = "INSERT INTO comanda_producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)";
                         for (int i = 0; i < commandProducts.length(); i++) {
                             JSONObject product = commandProducts.getJSONObject(i);
                             UtilsDB.getInstance().executeUpdate(
@@ -232,7 +231,10 @@ public class Server extends WebSocketServer {
 
             }
         } catch (JSONException e) {
-            conn.send("{type: 'error', message: 'Malformed JSON,required parameters not found for request of type ' + type'}");
+            JSONObject rst = new JSONObject();
+            rst.put("type", "error");
+            rst.put("message", "Malformed JSON,required parameters not found for request of type " + type);
+            conn.send(rst.toString());
         }
     }
 
