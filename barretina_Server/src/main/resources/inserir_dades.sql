@@ -54,6 +54,7 @@ insert into producte(nom, calent, preu, tipus) values
 --3 Quan es pagi un producte s'actualitzi l'estat de la comanda a "efectuant_pagament" comprobant que no tingui ja aquest estat
 -- a mes comprobara si s'ha pagat tots els productes de la comanda per a que quan aixo pasi, es canvii l'estat de la comanda a "pagat"
 --4 Quan es faci un pagament de tota la comanda l'estat de tots els productes pasi a ser pagat
+
 DELIMITER $$
 
 CREATE TRIGGER actualizar_preu_conjunt
@@ -65,13 +66,11 @@ BEGIN
         SET preu_conjunt = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * NEW.quantitat
         WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
     END IF;
-
 END$$
 
 DELIMITER ;
 
 DELIMITER $$
-
 CREATE TRIGGER actualizar_preu_restant
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
@@ -92,7 +91,6 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-
 CREATE TRIGGER actualitzar_estat_comanda
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
