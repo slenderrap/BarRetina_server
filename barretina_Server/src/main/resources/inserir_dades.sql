@@ -48,6 +48,12 @@ insert into producte(nom, calent, preu, tipus) values
 ("Macarrons a la bolonyesa ",1,3.00,"entrant"),
 ("Gaspatxo",0,5.00,"entrant");
 
+--triggers necesaris
+--1 Quan es modifiqui la quantat de productes el preu conjunt es modifiqui de la taula comanda_producte
+--2 Quan es faci el pagamente d'un producte el preu_restant disminueixi en funcio dels productes que ja s'han pagat
+--3 Quan es pagi un producte s'actualitzi l'estat de la comanda a "efectuant_pagament" comprobant que no tingui ja aquest estat
+-- a mes comprobara si s'ha pagat tots els productes de la comanda per a que quan aixo pasi, es canvii l'estat de la comanda a "pagat"
+--4 Quan es faci un pagament de tota la comanda l'estat de tots els productes pasi a ser pagat
 DELIMITER $$
 
 CREATE TRIGGER actualizar_preu_conjunt
@@ -59,28 +65,7 @@ BEGIN
         SET preu_conjunt = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * NEW.quantitat
         WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
     END IF;
-END$$
 
-DELIMITER ;
-
-DELIMITER $$
-
-CREATE TRIGGER actualizar_preu_restant
-AFTER UPDATE ON comanda_producte
-FOR EACH ROW
-BEGIN
-    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
-        IF quantitat = NEW.quantitat_pagada THEN
-            UPDATE comanda_producte
-            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( OLD.quantitat - NEW.quantitat_pagada),
-            estat = 'pagada'
-            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
-
-        ELSE
-            UPDATE comanda_producte
-            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( OLD.quantitat - NEW.quantitat_pagada)
-            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
-    END IF;
 END$$
 
 DELIMITER ;
@@ -106,3 +91,45 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+
+CREATE TRIGGER actualitzar_estat_comanda
+AFTER UPDATE ON comanda_producte
+FOR EACH ROW
+BEGIN
+    DECLARE resultats INT;
+    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
+        IF (SELECT estat FROM comanda WHERE id_comanda = NEW.id_comanda) != 'efectuant_pagament' THEN
+            UPDATE comanda
+            SET estat = 'efectuant_pagament'
+            WHERE id_comanda = NEW.id_comanda;
+        END IF;
+    END IF;
+    IF OLD.estat <> NEW.estat THEN
+        SELECT COUNT(*)
+        INTO resultats
+        FROM comanda_producte
+        WHERE id_comanda = NEW.id_comanda AND estat != 'pagat';
+        IF resultats = 0 THEN
+            UPDATE comanda
+            SET estat = 'pagat'
+            WHERE id_comanda = NEW.id_comanda;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER actualitzar_estat_comanda_producte
+AFTER UPDATE ON comanda
+FOR EACH ROW
+BEGIN
+    IF NEW.estat = 'pagat' THEN
+        UPDATE comanda_producte
+        SET quantitat_pagada = quantitat
+        WHERE id_comanda= NEW.id_comanda;
+    END IF;
+END$$
+
+DELIMITER ;
