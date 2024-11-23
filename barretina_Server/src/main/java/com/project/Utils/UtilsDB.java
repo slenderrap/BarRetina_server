@@ -40,11 +40,11 @@ public class UtilsDB {
     }
 
     public void connect() {
-        String url = "jdbc:mysql://" + HostName + ":" + Port + "/" + DatabaseName;
+        String url = "jdbc:mysql://" + HostName + ":" + Port + "/" + DatabaseName+"?serverTimezone=UTC&autoReconnect=true&useSSL=false";
         try {
             conn = DriverManager.getConnection(url, Username, Password);
             conn.setAutoCommit(false); // Desactiva l'autocommit per permetre control manual de transaccions
-            
+            conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         } catch (SQLException e) {
             System.out.println("Error conecting to the database");
             e.printStackTrace();
@@ -139,20 +139,36 @@ public class UtilsDB {
         return resultList;
     }
 
-    public JSONArray queryToJsonArray(String sql) {
-        List<Map<String, Object>> resultList = query(sql);
+    public JSONArray queryToJsonArray(String sql, Object... params) {
+        ResultSet rs = null;
         JSONArray jsonArray = new JSONArray();
-        for (Map<String, Object> row : resultList) {
-            JSONObject jsonObject = new JSONObject();
-            for (Map.Entry<String, Object> entry : row.entrySet()) {
-                if (entry.getValue() != null) {
-                    jsonObject.put(entry.getKey(), entry.getValue());
-                }
-                else{
-                    jsonObject.put(entry.getKey(), JSONObject.NULL);
-                }
+        try{
+            PreparedStatement stmt = getPreparedStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
             }
-            jsonArray.put(jsonObject);
+            rs = stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        //transforma el resultset en jsonarray
+        try {
+            while (rs.next()) { 
+                JSONObject jsonObject = new JSONObject();
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    if (rs.getObject(i) != null) {
+                        jsonObject.put(rs.getMetaData().getColumnLabel(i).toLowerCase(), rs.getObject(i));
+                    }
+                    else{
+                        jsonObject.put(rs.getMetaData().getColumnLabel(i).toLowerCase(), JSONObject.NULL);
+                    }
+                }
+                jsonArray.put(jsonObject);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return jsonArray;
     }
@@ -260,6 +276,14 @@ public class UtilsDB {
         }
         
         return generatedId;
+    }
+
+    public void rollback() {
+        try {
+            conn.rollback();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void commit() {
