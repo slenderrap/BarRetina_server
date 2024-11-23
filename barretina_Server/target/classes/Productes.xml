@@ -54,9 +54,9 @@
         <imatge>Vermut.jpg</imatge>
     </producte>
     <producte id="6">
-        <nom>Suc de piña</nom>
+        <nom>Suc de pinya</nom>
         <preu>2.20</preu>
-        <descripcio>Suc de piña natural</descripcio>
+        <descripcio>Suc de pinya natural</descripcio>
         <tags>
             <tag>beguda</tag>
             <tag>fred</tag>
@@ -64,9 +64,9 @@
         <imatge>SucPiña.jpg</imatge>
     </producte>
     <producte id="7">
-        <nom>Cafè</nom>
+        <nom>Cafe</nom>
         <preu>1.30</preu>
-        <descripcio>Cafè acabat de fer</descripcio>
+        <descripcio>Cafe acabat de fer</descripcio>
         <tags>
             <tag>beguda</tag>
             <tag>calent</tag>
@@ -88,7 +88,7 @@
     <producte id="9">
         <nom>Croquetes de pernil</nom>
         <preu>5.00</preu>
-        <descripcio>Croquetes casolanes de pernil ibèric</descripcio>
+        <descripcio>Croquetes casolanes de pernil iberic</descripcio>
         <tags>
             <tag>tapa</tag>
             <tag>calent</tag>
@@ -106,9 +106,9 @@
         <imatge>Calamars.jpg</imatge>
     </producte>
     <producte id="11">
-        <nom>Pernil ibèric</nom>
+        <nom>Pernil iberic</nom>
         <preu>12.00</preu>
-        <descripcio>Ració de pernil ibèric de gla</descripcio>
+        <descripcio>Ració de pernil iberic de gla</descripcio>
         <tags>
             <tag>tapa</tag>
             <tag>fred</tag>
@@ -148,9 +148,9 @@
         <imatge>Crema.jpg</imatge>
     </producte>
     <producte id="15">
-        <nom>Mel i mató</nom>
+        <nom>Mel i mato</nom>
         <preu>4.50</preu>
-        <descripcio>Mató amb mel i nous</descripcio>
+        <descripcio>Mato amb mel i nous</descripcio>
         <tags>
             <tag>postre</tag>
             <tag>fred</tag>
@@ -170,7 +170,7 @@
     <producte id="17">
         <nom>Flam d'ou</nom>
         <preu>3.50</preu>
-        <descripcio>Flam casolà amb nata</descripcio>
+        <descripcio>Flam casola amb nata</descripcio>
         <tags>
             <tag>postre</tag>
             <tag>fred</tag>
@@ -188,9 +188,9 @@
         <imatge>Brownie.jpg</imatge>
     </producte>
     <producte id="19">
-        <nom>Meduixes amb nata</nom>
+        <nom>Maduixes amb nata</nom>
         <preu>3.50</preu>
-        <descripcio>Meduixes fresques amb nata</descripcio>
+        <descripcio>Maduixes fresques amb nata</descripcio>
         <tags>
             <tag>postre</tag>
             <tag>fred</tag>
@@ -240,9 +240,9 @@
         <imatge>Canelons.jpg</imatge>
     </producte>
     <producte id="24">
-        <nom>Macarrons a la boloñesa</nom>
+        <nom>Macarrons a la bolonyesa</nom>
         <preu>3.00</preu>
-        <descripcio>Macarrons amb salsa boloñesa</descripcio>
+        <descripcio>Macarrons amb salsa bolonyesa</descripcio>
         <tags>
             <tag>entrant</tag>
             <tag>fred</tag>
@@ -252,7 +252,7 @@
     <producte id="25">
         <nom>Gaspatxo</nom>
         <preu>5.00</preu>
-        <descripcio>Sopa fred de tomàquet i verdures</descripcio>
+        <descripcio>Sopa fred de tomaquet i verdures</descripcio>
         <tags>
             <tag>entrant</tag>
             <tag>fred</tag>

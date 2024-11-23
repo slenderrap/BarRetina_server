@@ -61,10 +61,14 @@ CREATE TRIGGER actualizar_preu_conjunt
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
 BEGIN
-    IF OLD.quantitat <> NEW.quantitat THEN
-        UPDATE comanda_producte
-        SET preu_conjunt = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * NEW.quantitat
-        WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+    IF @trigger_active IS NULL THEN
+        SET @trigger_active = 1;
+        IF OLD.quantitat <> NEW.quantitat THEN
+            UPDATE comanda_producte
+            SET preu_conjunt = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * NEW.quantitat
+            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+        END IF;
+        SET @trigger_active = NULL;
     END IF;
 END$$
 
@@ -75,44 +79,53 @@ CREATE TRIGGER actualizar_preu_restant
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
 BEGIN
-    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
-        IF NEW.quantitat = NEW.quantitat_pagada THEN
-            UPDATE comanda_producte
-            SET preu_restant = 0, estat = 'pagada'
-            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
-        ELSE
-            UPDATE comanda_producte
-            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( NEW.quantitat - NEW.quantitat_pagada)
-            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+    IF @trigger_active IS NULL THEN
+        SET @trigger_active = 1;
+        IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
+            IF NEW.quantitat = NEW.quantitat_pagada THEN
+                UPDATE comanda_producte
+                SET preu_restant = 0, estat = 'pagada'
+                WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+            ELSE
+                UPDATE comanda_producte
+                SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( NEW.quantitat - NEW.quantitat_pagada)
+                WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
+            END IF;
         END IF;
+        SET @trigger_active = NULL;
     END IF;
 END$$
 
 DELIMITER ;
 
 DELIMITER $$
+
 CREATE TRIGGER actualitzar_estat_comanda
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
 BEGIN
-    DECLARE resultats INT;
-    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
-        IF (SELECT estat FROM comanda WHERE id_comanda = NEW.id_comanda) != 'efectuant_pagament' THEN
-            UPDATE comanda
-            SET estat = 'efectuant_pagament'
-            WHERE id_comanda = NEW.id_comanda;
+DECLARE resultats INT;
+    IF @trigger_active IS NULL THEN
+        SET @trigger_active = 1;
+        IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
+            IF (SELECT estat FROM comanda WHERE id_comanda = NEW.id_comanda) != 'efectuant_pagament' THEN
+                UPDATE comanda
+                SET estat = 'efectuant_pagament'
+                WHERE id_comanda = NEW.id_comanda;
+            END IF;
         END IF;
-    END IF;
-    IF OLD.estat <> NEW.estat THEN
-        SELECT COUNT(*)
-        INTO resultats
-        FROM comanda_producte
-        WHERE id_comanda = NEW.id_comanda AND estat != 'pagat';
-        IF resultats = 0 THEN
-            UPDATE comanda
-            SET estat = 'pagat'
-            WHERE id_comanda = NEW.id_comanda;
+        IF OLD.estat <> NEW.estat THEN
+            SELECT COUNT(*)
+            INTO resultats
+            FROM comanda_producte
+            WHERE id_comanda = NEW.id_comanda AND estat != 'pagat';
+            IF resultats = 0 THEN
+                UPDATE comanda
+                SET estat = 'pagat'
+                WHERE id_comanda = NEW.id_comanda;
+            END IF;
         END IF;
+        SET @trigger_active = NULL;  -- Desactivar la variable al finalizar
     END IF;
 END$$
 
@@ -123,10 +136,14 @@ CREATE TRIGGER actualitzar_estat_comanda_producte
 AFTER UPDATE ON comanda
 FOR EACH ROW
 BEGIN
-    IF NEW.estat = 'pagat' THEN
-        UPDATE comanda_producte
-        SET quantitat_pagada = quantitat
-        WHERE id_comanda= NEW.id_comanda;
+    IF @trigger_active IS NULL THEN
+        SET @trigger_active = 1;
+        IF NEW.estat = 'pagat' THEN
+            UPDATE comanda_producte
+            SET quantitat_pagada = quantitat
+            WHERE id_comanda= NEW.id_comanda;
+        END IF;
+        SET @trigger_active = NULL;  -- Desactivar la variable al finalizar
     END IF;
 END$$
 
