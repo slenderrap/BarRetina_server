@@ -61,35 +61,45 @@ CREATE TRIGGER actualitzar_preu_conjunt
 AFTER UPDATE ON comanda_producte
 FOR EACH ROW
 BEGIN
-    IF OLD.quantitat <> NEW.quantitat THEN
-        UPDATE comanda_producte
+	IF OLD.quantitat <> NEW.quantitat THEN
+    	UPDATE comanda_producte
         SET preu_conjunt = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * NEW.quantitat
         WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
     END IF;
 END$$
 
 DELIMITER ;
-/*
+
 DELIMITER $$
-CREATE TRIGGER actualitzar_preu_restant
-BEFORE UPDATE ON comanda_producte
-FOR EACH ROW
+
+CREATE PROCEDURE actualitzar_preu_restant_proc(
+    IN p_id_comanda INT,
+    IN p_id_producte INT,
+    IN p_quantitat_pagada INT
+)
 BEGIN
-    IF OLD.quantitat_pagada <> NEW.quantitat_pagada THEN
-        IF NEW.quantitat = NEW.quantitat_pagada THEN
-            UPDATE comanda_producte
-            SET preu_restant = 0, estat = 'pagada'
-            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
-        ELSE
-            UPDATE comanda_producte
-            SET preu_restant = (SELECT preu FROM producte WHERE id_producte = NEW.id_producte) * ( NEW.quantitat - NEW.quantitat_pagada)
-            WHERE id_producte = NEW.id_producte and id_comanda= NEW.id_comanda;
-        END IF;
+    DECLARE p_quantitat INT;
+    DECLARE p_preu DECIMAL(7,2);
+    /* Obtener la cantidad total y el precio del producto*/
+    SELECT quantitat INTO p_quantitat
+    FROM comanda_producte
+    WHERE id_comanda = p_id_comanda AND id_producte = p_id_producte;
+    SELECT preu INTO p_preu
+    FROM producte
+    WHERE id_producte = p_id_producte;
+    IF p_quantitat = p_quantitat_pagada THEN
+        UPDATE comanda_producte
+        SET preu_restant = 0, estat = 'pagat'
+        WHERE id_comanda = p_id_comanda AND id_producte = p_id_producte;
+    ELSE
+        UPDATE comanda_producte
+        SET preu_restant = p_preu * (p_quantitat - p_quantitat_pagada)
+        WHERE id_comanda = p_id_comanda AND id_producte = p_id_producte;
     END IF;
 END$$
 
 DELIMITER ;
-*/
+
 DELIMITER $$
 
 CREATE TRIGGER actualitzar_estat_comanda
@@ -118,18 +128,34 @@ DECLARE resultats INT;
 END$$
 
 DELIMITER ;
-/*
+
 DELIMITER $$
-CREATE TRIGGER actualitzar_estat_comanda_producte
-BEFORE UPDATE ON comanda
-FOR EACH ROW
+CREATE PROCEDURE p_pagament_total(
+    IN p_id_comanda INT
+)
 BEGIN
-    IF NEW.estat = 'pagat' THEN
-        UPDATE comanda_producte
-        SET estat = 'pagat'
-        WHERE id_comanda= NEW.id_comanda;
-    END IF;
+    DECLARE p_id_producte INT;
+    DECLARE p_quantitat INT;
+    DECLARE done INT DEFAULT 0;
+    DECLARE c_coman_prod CURSOR FOR
+        SELECT id_producte, quantitat from comanda_producte where id_comanda = p_id_comanda;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    UPDATE comanda_producte
+    SET quantitat_pagada = quantitat
+    WHERE id_comanda = p_id_comanda;
+
+    UPDATE comanda SET estat = 'pagat' WHERE id_comanda=p_id_comanda;
+    open c_coman_prod;
+    bucle_productos: LOOP
+        FETCH c_coman_prod into p_id_producte,p_quantitat;
+        IF done then
+            LEAVE bucle_productos;
+        END IF;
+        CALL actualizar_preu_restant_proc(p_id_comanda,p_id_producte,p_quantitat);
+    END LOOP;
+    CLOSE c_coman_prod;
 END$$
 
 DELIMITER ;
-*/
+
