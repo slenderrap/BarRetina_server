@@ -14,6 +14,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
+import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.ResultSetMetaData;
@@ -276,6 +278,35 @@ public class UtilsDB {
         }
         
         return generatedId;
+    }
+
+    public void CallProcedure(String procedureName, Object... params) {
+        CallableStatement stmt = null;
+        try {
+            String sql = "{CALL " + procedureName + "(";
+            for (int i = 0; i < params.length; i++) {
+                sql += " ? ";
+                if (i < params.length - 1) {
+                    sql += ", ";
+                }
+            }
+            sql += ")}";
+            stmt = conn.prepareCall(sql);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void rollback() {

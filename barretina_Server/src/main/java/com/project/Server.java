@@ -67,17 +67,19 @@ public class Server extends WebSocketServer {
         clients.remove(conn);
         availableNames.add(clientName);
         System.out.println("WebSocket client disconnected: " + clientName);
+//        sendClientsList();
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
+        System.out.println("aqui");
         String type = "";
         try {
             JSONObject obj = new JSONObject(message);
 
             if (obj.has("type")) {
-                type = obj.getString("type");
-                System.out.println("request recived with type: " + type);
+                String type = obj.getString("type");
+
                 switch (type) {
                     case "bounce":
                         // Obtenim el clientId del missatge
@@ -125,20 +127,31 @@ public class Server extends WebSocketServer {
                         rst4.put("type", "ack");
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray(
-                            "SELECT SQL_NO_CACHE t.id_taula as tableNumber, ca.nom as waiter, "
-                            +"t.ocupada as occupied, c.estat as state "
+                            "SELECT t.id_taula as tableNumber, ca.nom as waiter, "
+                            +"t.ocupada as occupied, c.pagat as paid "
                             +"FROM taula t LEFT JOIN comanda c ON c.id_taula = t.id_taula "
                             +"LEFT JOIN cambrer ca ON ca.id_cambrer = t.id_cambrer"
                         );
                         rst4.put("tables", jsonTables);
                         conn.send(rst4.toString());
                         break;
+                        //TEST
+                        /*JSONObject rst4 = new JSONObject();
+                        rst4.put("type", "ack");
+                        rst4.put("responseType", "getTables");
+                        JSONArray jsonTables = new JSONArray();
+                        jsonTables.put(new JSONObject("{tableNumber: 1, waiter: 'Marc', occupied: false, paid: false}"));
+                        jsonTables.put(new JSONObject("{tableNumber: 2, waiter: 'Maria', occupied: true, paid: false}"));
+                        jsonTables.put(new JSONObject("{tableNumber: 3, waiter: 'Pere', occupied: true, paid: true}"));
+                        rst4.put("tables", jsonTables);
+                        conn.send(rst4.toString());
+                        break;*/
                     case "setCommand":
                         int tableNumber = obj.getInt("tableNumber");
                         JSONArray commandProducts = obj.getJSONArray("products");
                         
                         // Check if table has an existing command
-                        String checkCommandQuery = "SELECT id_comanda FROM comanda WHERE id_taula = ? AND estat != 'pagat'";
+                        String checkCommandQuery = "SELECT id_comanda FROM comanda WHERE taula_id = ?";
                         
                         ResultSet rs = UtilsDB.getInstance().queryResultSet(checkCommandQuery, tableNumber);
                         
@@ -152,12 +165,15 @@ public class Server extends WebSocketServer {
                                     commandId = rs.getInt("id_comanda");
                                     commandExists = true;
                                 }
+                            } else {
+                                conn.send("{type: 'error', message: 'Error table does not exists, tableNumber: " + tableNumber + "'}");
+                                return;
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         } finally {
                             try {
-                                if (rs != null && !rs.isClosed()) {
+                                if (rs != null) {
                                     rs.close();
                                 }
                             } catch (SQLException e) {
@@ -171,36 +187,24 @@ public class Server extends WebSocketServer {
                                 "DELETE FROM comanda_producte WHERE id_comanda = ?",
                                 commandId
                             );
-                            int total = 0;
-                            for (int i = 0; i < commandProducts.length(); i++) {
-                                JSONObject product = commandProducts.getJSONObject(i);
-                                total += product.getInt("quantity")*product.getDouble("unitPrice");
-                            }
-                            String updateCommandQuery = "UPDATE comanda SET preu_total = ? WHERE id_comanda = ?";
-                            UtilsDB.getInstance().executeUpdate(
-                                false,
-                                updateCommandQuery,
-                                total,
-                                commandId
-                            );
                         } else {
-                            String insertCommandQuery = "INSERT INTO comanda (data_comanda, id_taula, preu_total) VALUES (?, ?, ?)";
-                            int total = 0;
-                            for (int i = 0; i < commandProducts.length(); i++) {
-                                JSONObject product = commandProducts.getJSONObject(i);
-                                total += product.getInt("quantity")*product.getDouble("unitPrice");
-                            }
+                            String insertCommandQuery = "INSERT INTO comanda (pagat, data) VALUES (false, ?)";
                             commandId = UtilsDB.getInstance().executeInsert(
                                 false,
                                 insertCommandQuery,
-                                new Timestamp(System.currentTimeMillis()),
-                                tableNumber,
-                                total
+                                new Timestamp(System.currentTimeMillis())
+                            );
+                            String updateTableQuery = "UPDATE taula SET id_comanda = ? WHERE id_taula = ?";
+                            UtilsDB.getInstance().executeUpdate(
+                                false,
+                                updateTableQuery,
+                                commandId,
+                                tableNumber
                             );
                         }
 
                         // Insert new command-products
-                        String insertProductQuery = "INSERT INTO comanda_producte (id_comanda, id_producte, quantitat, preu_conjunt,preu_restant,estat) VALUES (?, ?, ?, ?, ?, ?)";
+                        String insertProductQuery = "INSERT INTO comanda-producte (id_comanda, id_producte, quantitat) VALUES (?, ?, ?)";
                         for (int i = 0; i < commandProducts.length(); i++) {
                             JSONObject product = commandProducts.getJSONObject(i);
                             UtilsDB.getInstance().executeUpdate(
@@ -208,10 +212,7 @@ public class Server extends WebSocketServer {
                                 insertProductQuery,
                                 commandId,
                                 product.getInt("id"),
-                                product.getInt("quantity"),
-                                product.getInt("quantity")*product.getDouble("unitPrice"),
-                                product.getInt("quantity")*product.getDouble("unitPrice"),
-                                "demanat"
+                                product.getInt("quantity")
                             );
                         }
 
@@ -223,64 +224,16 @@ public class Server extends WebSocketServer {
                         conn.send(response.toString());
                         UtilsDB.getInstance().commit();
                         break;
-                    case "newCommand":
-                        int tableNumber2 = obj.getInt("tableNumber");
-                        //Checj if there is already a command on that table
-                        String checkCommand = "SELECT id_comanda FROM comanda WHERE id_taula = ? AND estat != 'pagat'";
-                        ResultSet rs2 = UtilsDB.getInstance().queryResultSet(checkCommand, tableNumber2);
-                        try {
-                            if (rs2.next()) {
-                                // Command Already exists
-                                JSONObject rts5 = new JSONObject();
-                                rts5.put("type", "error");
-                                rts5.put("message","Command already exists");
-                                conn.send(rts5.toString());
-                            }
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } finally {
-                            try {
-                                if (rs2 != null && !rs2.isClosed()) {
-                                    rs2.close();
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        String sqlnewCommand = "INSERT INTO comanda (data_comanda, id_taula, preu_total) VALUES (?, ?, ?)";
-                        int Idcommand = UtilsDB.getInstance().executeInsert(
-                            sqlnewCommand,
-                            new Timestamp(System.currentTimeMillis()),
-                            tableNumber2,
-                            0
-                        );
-                        JSONObject rst5 = new JSONObject();
-                        rst5.put("type", "ack");
-                        rst5.put("responseType", "newCommand");
-                        rst5.put("commandId", Idcommand);
-                        conn.send(rst5.toString());
+                    
+                    case "payAmount":
+                        int payAmountcommandId = obj.getInt("commandId");
+                        int productId = obj.getInt("productId");
+                        int quantity = obj.getInt("quantity");
+                        UtilsDB.getInstance().CallProcedure("actualitzar_preu_restant_proc", payAmountcommandId, productId, quantity);
                         break;
-                    case "getCommands":
-                        String sqlgetCommands = "SELECT * FROM comanda";
-                        JSONArray jsonCommands = UtilsDB.getInstance().queryToJsonArray(sqlgetCommands);
-                        JSONObject rst6 = new JSONObject();
-                        rst6.put("type", "ack");
-                        rst6.put("responseType", "getCommands");
-                        rst6.put("commands", jsonCommands);
-                        conn.send(rst6.toString());
-                        break;
-                    case "getCommand":
-                        int getCommandId = obj.getInt("commandId");
-                        String sqlgetCommand = "SELECT * FROM comanda WHERE id_comanda = ?";
-                        JSONArray jsonCommand = UtilsDB.getInstance().queryToJsonArray(sqlgetCommand, getCommandId);
-                        String sqlgetCommandProducts = "SELECT * FROM comanda_producte WHERE id_comanda = ?";
-                        JSONArray jsonCommandProducts = UtilsDB.getInstance().queryToJsonArray(sqlgetCommandProducts, getCommandId);
-                        JSONObject rst7 = new JSONObject();
-                        rst7.put("type", "ack");
-                        rst7.put("responseType", "getCommand");
-                        rst7.put("command", jsonCommand);
-                        rst7.put("products", jsonCommandProducts);
-                        conn.send(rst7.toString());
+                    case "payCommand":
+                        int payCommandCommandId = obj.getInt("commandId");
+                        UtilsDB.getInstance().CallProcedure("p_pagament_total", payCommandCommandId);
                         break;
                     default:
                         conn.send("{type: 'error', message: 'Unknow command'}");
