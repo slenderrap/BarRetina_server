@@ -126,7 +126,7 @@ public class Server extends WebSocketServer {
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray(
                             "SELECT SQL_NO_CACHE t.id_taula as tableNumber, ca.nom as waiter, "
-                            +"t.ocupada as occupied, c.pagat as paid "
+                            +"t.ocupada as occupied, c.estat as state "
                             +"FROM taula t LEFT JOIN comanda c ON c.id_taula = t.id_taula "
                             +"LEFT JOIN cambrer ca ON ca.id_cambrer = t.id_cambrer"
                         );
