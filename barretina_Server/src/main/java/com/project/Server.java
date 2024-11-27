@@ -67,6 +67,7 @@ public class Server extends WebSocketServer {
         clients.remove(conn);
         availableNames.add(clientName);
         System.out.println("WebSocket client disconnected: " + clientName);
+//        sendClientsList();
     }
 
     @Override
@@ -74,10 +75,11 @@ public class Server extends WebSocketServer {
         String type = "";
         try {
             JSONObject obj = new JSONObject(message);
-
+            
             if (obj.has("type")) {
                 type = obj.getString("type");
-                System.out.println("request recived with type: " + type);
+                System.out.println("recived request of type: " + type);
+
                 switch (type) {
                     case "bounce":
                         // Obtenim el clientId del missatge
@@ -126,7 +128,7 @@ public class Server extends WebSocketServer {
                         rst4.put("responseType", "getTables");
                         JSONArray jsonTables = UtilsDB.getInstance().queryToJsonArray(
                             "SELECT SQL_NO_CACHE t.id_taula as tableNumber, ca.nom as waiter, "
-                            +"t.ocupada as occupied, c.pagat as paid "
+                            +"t.ocupada as occupied, c.estat as state "
                             +"FROM taula t LEFT JOIN comanda c ON c.id_taula = t.id_taula "
                             +"LEFT JOIN cambrer ca ON ca.id_cambrer = t.id_cambrer"
                         );
@@ -281,6 +283,81 @@ public class Server extends WebSocketServer {
                         rst7.put("command", jsonCommand);
                         rst7.put("products", jsonCommandProducts);
                         conn.send(rst7.toString());
+                        break;
+                    case "payAmount":
+                        int payAmountcommandId = obj.getInt("commandId");
+                        int productId = obj.getInt("productId");
+                        int amountPaid = obj.getInt("amount");
+                        //Update the product with the amount paid
+                        System.out.println("Paying amount: " + amountPaid + " for command: " + payAmountcommandId + " and product: " + productId);
+                        String sqlPayAmount = "UPDATE comanda_producte SET quantitat_pagada = quantitat_pagada + ? WHERE id_comanda = ? AND id_producte = ?";
+                        UtilsDB.getInstance().executeUpdate(
+                            false,
+                            sqlPayAmount,
+                            amountPaid,
+                            payAmountcommandId,
+                            productId
+                        );
+                        String getNewQuantityPaid = "SELECT quantitat_pagada FROM comanda_producte WHERE id_comanda = ? AND id_producte = ?";
+                        ResultSet rs3 = UtilsDB.getInstance().queryResultSet(getNewQuantityPaid, payAmountcommandId, productId);
+                        int newQuantity = 0;
+                        try {
+                            if (rs3.next()) {
+                                newQuantity = rs3.getInt("quantitat_pagada");
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (rs3 != null && !rs3.isClosed()) {
+                                    rs3.close();
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (newQuantity == 0) {
+                            //Error, roll back
+                            UtilsDB.getInstance().rollback();
+                            JSONObject rst8 = new JSONObject();
+                            rst8.put("type", "error");
+                            rst8.put("message", "Error paying amount");
+                            conn.send(rst8.toString());
+                            return;
+                        }
+                        //Call the procedure to pay the command
+                        UtilsDB.getInstance().CallProcedure("actualizar_preu_restant_proc", payAmountcommandId, productId, newQuantity);
+                        UtilsDB.getInstance().commit();
+                        break;
+                    case "payCommand":
+                        int payCommandCommandId = obj.getInt("commandId");
+                        UtilsDB.getInstance().CallProcedure("p_pagament_total", payCommandCommandId);
+                        UtilsDB.getInstance().commit();
+                        break;
+                    case "insertWaiter":
+                        boolean newWaiter=true;
+                        String name = obj.getString("name");
+                        String sqlgetWaiter = "SELECT * FROM cambrer where nom like ?";
+                        ResultSet rsWaiter = UtilsDB.getInstance().queryResultSet(sqlgetWaiter,name);
+                        int idWaiter = 0;
+                        try{
+                            if (rsWaiter.next()){
+                                newWaiter = false;
+                                idWaiter = rsWaiter.getInt(1);
+                            }
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if (newWaiter){
+                            String sqlnewWaiter = "INSERT INTO cambrer(nom) VALUES (?)";
+                            idWaiter = UtilsDB.getInstance().executeInsert(sqlnewWaiter,name);
+                        }
+                            JSONObject reply = new JSONObject();
+                            reply.put("type", "ack");
+                            reply.put("responseType", "insertWaiter");
+                            reply.put("idWaiter", idWaiter);
+                            conn.send(reply.toString());
+
                         break;
                     default:
                         conn.send("{type: 'error', message: 'Unknow command'}");
