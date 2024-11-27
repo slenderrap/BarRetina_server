@@ -334,6 +334,27 @@ public class Server extends WebSocketServer {
                         UtilsDB.getInstance().CallProcedure("p_pagament_total", payCommandCommandId);
                         UtilsDB.getInstance().commit();
                         break;
+                    case "insertWaiter":
+                        boolean newWaiter=true;
+                        String name = obj.getString("name");
+                        String sqlgetWaiter = "SELECT * FROM cambrer where name like '?'";
+                        ResultSet rsWaiter = UtilsDB.getInstance().queryResultSet(sqlgetWaiter,name);
+                        try{
+                            if (rsWaiter.next()){
+                                newWaiter = false;
+                            }
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if (newWaiter){
+                            String sqlnewWaiter = "INSERT INTO cambrer(nom) VALUES ('?')";
+                            int idWaiter = UtilsDB.getInstance().executeInsert(sqlnewWaiter,name);
+                            JSONObject reply = new JSONObject();
+                            reply.put("type", "ack");
+                            reply.put("responseType", "insertWaiter");
+                            reply.put("idWaiter", idWaiter);
+                            conn.send(reply.toString());
+                        }
                     default:
                         conn.send("{type: 'error', message: 'Unknow command'}");
                         break;
