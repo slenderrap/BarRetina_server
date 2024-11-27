@@ -337,24 +337,28 @@ public class Server extends WebSocketServer {
                     case "insertWaiter":
                         boolean newWaiter=true;
                         String name = obj.getString("name");
-                        String sqlgetWaiter = "SELECT * FROM cambrer where name like '?'";
+                        String sqlgetWaiter = "SELECT * FROM cambrer where nom like ?";
                         ResultSet rsWaiter = UtilsDB.getInstance().queryResultSet(sqlgetWaiter,name);
+                        int idWaiter = 0;
                         try{
                             if (rsWaiter.next()){
                                 newWaiter = false;
+                                idWaiter = rsWaiter.getInt(1);
                             }
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
                         if (newWaiter){
-                            String sqlnewWaiter = "INSERT INTO cambrer(nom) VALUES ('?')";
-                            int idWaiter = UtilsDB.getInstance().executeInsert(sqlnewWaiter,name);
+                            String sqlnewWaiter = "INSERT INTO cambrer(nom) VALUES (?)";
+                            idWaiter = UtilsDB.getInstance().executeInsert(sqlnewWaiter,name);
+                        }
                             JSONObject reply = new JSONObject();
                             reply.put("type", "ack");
                             reply.put("responseType", "insertWaiter");
                             reply.put("idWaiter", idWaiter);
                             conn.send(reply.toString());
-                        }
+
+                        break;
                     default:
                         conn.send("{type: 'error', message: 'Unknow command'}");
                         break;
